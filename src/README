@@ -1,0 +1,43 @@
+This directory implements the solution to the problem described below:
+
+    https://sites.google.com/a/nyansa.com/nyansa-programming-exercise/
+
+
+How to build, test, and run (everything from the root directory, assuming having
+installed bazel via `brew install bazel`):
+
+    # Build the url_count executable.
+    bazel build src:url_count
+
+    # The executable is stored at bazel-bin/src/url_count.
+    # Run the test data:
+    bazel-bin/src/url_count src/test_data/1.txt
+
+    # Run the gtest test suite:
+    bazel test src/...
+
+
+Complexity (big-O) analysis of the `url_count` executable (can be built using
+`bazel build src:url_count`):
+
+    The input file is read one line at a time.  So it is OK for the file to be
+    larger than the capacity of the RAM.
+
+    Denote:
+        N as the total number of lines,
+        M as the cardinality of the set of all unique (date, url) tuples.
+        L as the maximal number of unique url on any given day.
+
+    According to the statement of the problem, N is much greater than M.
+
+    Reading the entries into RAM takes O(1) extra RAM and O(N) time.  This is
+    done by using the streaming interface.
+
+    The extra RAM storage required is O(M).  The time complexity to insert a new
+    entry is either O(logM) because I am using a map (in C++, it is a self
+    balanced binary search tree, thus requiring logM time to search and insert).
+
+    When printing the result out to stdout, the url hit counts within each day
+    are copied out-of-place and sorted before being printed.  In this process,
+    O(L) extra RAM is required and a quick sort on L elements are performed.
+    The quick sort is usually O(logL), but could deteriorate into O(L).

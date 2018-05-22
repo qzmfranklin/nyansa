@@ -1,0 +1,14 @@
+- Install bazel
+    https://docs.bazel.build/versions/master/install.html
+
+
+- Producer and Consumer Exercise:
+    https://sites.google.com/a/nyansa.com/nyansa-producer-consumer-exercise/
+
+    The explanation and the solution are provided in ./producer-consumer.txt.
+
+
+- Programming Exercise
+    https://sites.google.com/a/nyansa.com/nyansa-programming-exercise/
+
+    The solution, code and big-O analysis, is inside ./src.

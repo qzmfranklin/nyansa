@@ -1,0 +1,39 @@
+Original pseudo code:
+    ```
+    Producer
+    while (true) {
+           item = generate_item()
+           mutex.lock()
+           fifo_queue.push(item)
+           mutex.unlock()
+           condition.signal()
+    }
+
+    Consumers
+    while(true) {
+           mutex.lock()
+           if (fifo_queue.empty()) {
+                 condition.wait(mutex)
+           }
+           item = fifo_queue.remove()
+           mutex.unlock()
+           process_item(item)
+    }
+    ```
+
+The Problem in the Code:
+    When multiple workers are signaled, all of them will contend to acquire the
+    resource.  However, not all of them will succeed.  Whoever grabs the mutex
+    locks the resource.  So, workers who did not acquire the mutex SHOULD have
+    been put to sleep (via a context switch).  However, in this code, those
+    workers to continue to execute, causing a race condition.
+
+Solution:
+    Apply the following patch to the Consumers
+    ```
+    --- if (fifo_queue.empty()) {
+    +++ while (fifo_queue.empty()) {
+    ```
+    Basically, use a while-loop to wait for the condition.  So after the
+    condition.wait(mutex) is signaled, the thread will still have to check for
+    the condition.
